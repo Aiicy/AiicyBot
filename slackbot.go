@@ -25,11 +25,11 @@ func GetToken(filename string) string {
 		token = os.Getenv("slacktoken")
 	}
 	/*
-	if err != nil {
-		fmt.Printf("Cannot get the slacktoken from config file: %s\n", filename)
-	} else {
-		token = os.Getenv("slacktoken")
-	}
+		if err != nil {
+			fmt.Printf("Cannot get the slacktoken from config file: %s\n", filename)
+		} else {
+			token = os.Getenv("slacktoken")
+		}
 	*/
 	return token
 }
@@ -46,6 +46,67 @@ func GetChannelId(filename string) string {
 		return ""
 	}
 	return channelId
+}
+
+//cmd = stock aapl
+//cmd = whoami
+func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string, channelid string) error {
+	if len(cmd) == 3 && cmd[1] == "stock" {
+		// looks good, get the quote and reply with the result
+		stock_mes := getQuote(cmd[2])
+		stock_info := cmd[2]
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			Pretext: stock_info,
+			Text:    stock_mes,
+			// Uncomment the following part to send a field too
+			/*
+				Fields: []slack.AttachmentField{
+					slack.AttachmentField{
+							Title: "a",
+							Value: "no",
+							},
+						},
+			*/
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, "stock ", params)
+		//channelID, timestamp, err := api.PostMessage("C3K9VAK3N", "stock ", params)
+		//channelID, timestamp, err := api.PostMessage("CHANNEL_ID", "stock ", params)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	} else if len(cmd) == 2 && cmd[1] == "whoami" {
+		user, err := api.GetUserInfo(userid)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		msg := fmt.Sprintf("USER_ID: %s\nFullname: %s\nEmail: %s\n", user.ID, user.Profile.RealName, user.Profile.Email)
+
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			Pretext:  "who am i",
+			Text:     msg,
+			ImageURL: user.Profile.Image72,
+			// Uncomment the following part to send a field too
+			/*
+				Fields: []slack.AttachmentField{
+					slack.AttachmentField{
+							Title: "a",
+							Value: "no",
+							},
+						},
+			*/
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, "whoami ", params)
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	}
+	return nil
+
 }
 
 func slackRun(token string, channelid string) {
@@ -80,35 +141,8 @@ Loop:
 					originalMessage := ev.Msg.Text
 
 					parts := strings.Fields(originalMessage)
-					if len(parts) == 3 && parts[1] == "stock" {
-						// looks good, get the quote and reply with the result
-						stock_mes := getQuote(parts[2])
-						stock_info := parts[2]
-						params := slack.PostMessageParameters{}
-						attachment := slack.Attachment{
-							Pretext: stock_info,
-							Text:    stock_mes,
-							// Uncomment the following part to send a field too
-							/*
-								Fields: []slack.AttachmentField{
-									slack.AttachmentField{
-									Title: "a",
-									Value: "no",
-									},
-								},
-							*/
-						}
-						params.Attachments = []slack.Attachment{attachment}
-						channelID, timestamp, err := api.PostMessage(channelid, "stock ", params)
-						//channelID, timestamp, err := api.PostMessage("C3K9VAK3N", "stock ", params)
-						//channelID, timestamp, err := api.PostMessage("CHANNEL_ID", "stock ", params)
-						if err != nil {
-							fmt.Printf("%s\n", err)
-							return
-						}
-						fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
-					}
 
+					ParseCommand(api, rtm, parts, callerID, channelid)
 				}
 
 			case *slack.PresenceChangeEvent:
