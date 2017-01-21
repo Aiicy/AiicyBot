@@ -1,12 +1,10 @@
 package main
 
 import (
-	"encoding/csv"
 	"fmt"
 	"github.com/nlopes/slack"
 	"github.com/olebedev/config"
 	"log"
-	"net/http"
 	"os"
 	"strings"
 )
@@ -104,6 +102,72 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		params.Attachments = []slack.Attachment{attachment}
 		channelID, timestamp, err := api.PostMessage(channelid, "whoami ", params)
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	} else if len(cmd) == 3 && (cmd[1] == "fuli" || cmd[1] == "magnet") {
+		// looks good, get the quote and reply with the result
+
+		//magnets := getMagnet(cmd[2])
+
+		magnet_info := cmd[2]
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			Pretext: magnet_info,
+			Text:    "test joy",
+			//Text:    magnets,
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, ":unamused: Magnet ", params)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	} else if len(cmd) == 2 && (cmd[1] == "old_driver" || cmd[1] == "old") {
+
+		user, err := api.GetUserInfo(userid)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		msg := fmt.Sprintf(":point_right: %s is an old driver\n", user.Profile.RealName)
+
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			//Pretext: magnet_info,
+			Text: msg,
+			//Text:    magnets,
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, "", params)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+
+	} else if len(cmd) == 2 && (cmd[1] == "botfather" || cmd[1] == "father" || cmd[1] == "bot_father") {
+
+		user, err := api.GetUserInfo("U3UP1QT8E")
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+
+		msg := fmt.Sprintf(":point_right: my botfather %s build me as a robot \n", user.Profile.RealName)
+
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			//Pretext: magnet_info,
+			Text: msg,
+			//Text:    magnets,
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, "", params)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+
 	}
 	return nil
 
@@ -166,23 +230,4 @@ Loop:
 		}
 	}
 
-}
-
-// Get the quote via Yahoo. You should replace this method to something
-// relevant to your team!
-func getQuote(sym string) string {
-	sym = strings.ToUpper(sym)
-	url := fmt.Sprintf("http://download.finance.yahoo.com/d/quotes.csv?s=%s&f=nsl1op&e=.csv", sym)
-	resp, err := http.Get(url)
-	if err != nil {
-		return fmt.Sprintf("error: %v", err)
-	}
-	rows, err := csv.NewReader(resp.Body).ReadAll()
-	if err != nil {
-		return fmt.Sprintf("error: %v", err)
-	}
-	if len(rows) >= 1 && len(rows[0]) == 5 {
-		return fmt.Sprintf("%s (%s) is trading at $%s", rows[0][0], rows[0][1], rows[0][2])
-	}
-	return fmt.Sprintf("unknown response format (symbol was \"%s\")", sym)
 }
