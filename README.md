@@ -1,10 +1,12 @@
 
 # mybot
 
-`mybot` is an working Slack bot written in Go. Fork it and use it to build
-your very own cool Slack bot!
+# config.yaml 
 
-Check the [blog post](https://www.opsdash.com/blog/slack-bot-in-golang.html)
-for a description of mybot internals.
+```yaml
+slacktoken: YOU_SLACK_BOT_API_TOKEN_HERE
+ReportChannel: '#chanel_name'
+botfather:  U3K9E0HRA  #botfather_id, use @botname whoami to get it
+BIJIN_TIMEZONE: 'Asia/Shanghai'
+```
 
-Follow us on Twitter today! [@therapidloop](https://twitter.com/therapidloop)
