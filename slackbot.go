@@ -9,7 +9,8 @@ import (
 	"strings"
 )
 
-var botID = "N/A"     // U2NQSPHHD bender bot userID
+var botID = "N/A" // U2NQSPHHD bender bot userID
+var botName = "@aiicybot"
 var channelID = "N/A" // C3K9VAK3N
 //var botFather = "" // use @botname whoami, to get the user_id of bot_father
 
@@ -63,26 +64,12 @@ func GetChannelId(filename string) string {
 
 //cmd = stock aapl
 //cmd = whoami
-func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string, channelid string) error {
-	if len(cmd) == 3 && cmd[1] == "stock" {
-		// looks good, get the quote and reply with the result
-		stock_mes := getQuote(cmd[2])
-		stock_info := cmd[2]
-		params := slack.PostMessageParameters{}
-		attachment := slack.Attachment{
-			Pretext: stock_info,
-			Text:    stock_mes,
-		}
-		params.Attachments = []slack.Attachment{attachment}
-		channelID, timestamp, err := api.PostMessage(channelid, "stock ", params)
-		//channelID, timestamp, err := api.PostMessage("C3K9VAK3N", "stock ", params)
-		//channelID, timestamp, err := api.PostMessage("CHANNEL_ID", "stock ", params)
-		if err != nil {
-			fmt.Printf("%s\n", err)
-			return err
-		}
-		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
-	} else if len(cmd) == 2 && cmd[1] == "whoami" {
+//cmd = botfather | father | bot_father
+//cmd = fuli | magnet
+//cmd = old | old_driver | olddriver
+
+func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string, botid string, channelid string) error {
+	if len(cmd) == 2 && cmd[1] == "whoami" {
 		user, err := api.GetUserInfo(userid)
 		if err != nil {
 			fmt.Printf("%s\n", err)
@@ -94,19 +81,54 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		attachment := slack.Attachment{
 			Pretext:  "who am i",
 			Text:     msg,
-			ImageURL: user.Profile.Image72,
-			// Uncomment the following part to send a field too
-			/*
-				Fields: []slack.AttachmentField{
-					slack.AttachmentField{
-							Title: "a",
-							Value: "no",
-							},
-						},
-			*/
+			ImageURL: user.Profile.Image192,
 		}
 		params.Attachments = []slack.Attachment{attachment}
 		channelID, timestamp, err := api.PostMessage(channelid, "whoami ", params)
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	} else if len(cmd) == 2 && (cmd[1] == "help" || cmd[1] == "h") {
+		/*
+			bot,   err := api.GetBotInfo(botid)
+			if err != nil {
+				fmt.Printf("%s\n", err)
+				return err
+			}
+		*/
+		mesg := fmt.Sprintf("%s command opts [val]\n", botName)
+
+		mesg = fmt.Sprintf(mesg + "help, get this help info\n")
+		mesg = fmt.Sprintf(mesg + "command list\n")
+		mesg = fmt.Sprintf(mesg + "   whoami -- get the user_id\n")
+		mesg = fmt.Sprintf(mesg + "   old|old_driver|olddriver, who is the old driver\n")
+		mesg = fmt.Sprintf(mesg + "   bot_father|botfather|father, get the bot father name\n")
+		mesg = fmt.Sprintf(mesg + "   fuli|magnet  val , get the magnet link\n")
+
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			Text: mesg,
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, "", params)
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+	} else if len(cmd) == 3 && cmd[1] == "stock" {
+		// looks good, get the quote and reply with the result
+		stock_mes := getQuote(cmd[2])
+		stock_info := cmd[2]
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			Pretext: stock_info,
+			Text:    stock_mes,
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, "stock ", params)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 	} else if len(cmd) == 3 && (cmd[1] == "fuli" || cmd[1] == "magnet") {
 		// looks good, get the quote and reply with the result
@@ -127,7 +149,7 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 			return err
 		}
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
-	} else if len(cmd) == 2 && (cmd[1] == "old_driver" || cmd[1] == "old") {
+	} else if len(cmd) == 2 && (cmd[1] == "old_driver" || cmd[1] == "old" || cmd[1] == "olddriver") {
 
 		user, err := api.GetUserInfo(userid)
 		if err != nil {
@@ -212,7 +234,7 @@ Loop:
 
 					parts := strings.Fields(originalMessage)
 
-					ParseCommand(api, rtm, parts, callerID, channelid)
+					ParseCommand(api, rtm, parts, callerID, botID, channelid)
 				}
 
 			case *slack.PresenceChangeEvent:
