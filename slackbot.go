@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/nlopes/slack"
-	"github.com/olebedev/config"
+	//"github.com/olebedev/config"
 	"log"
 	"os"
 	"strings"
@@ -14,53 +14,6 @@ var botName = "@aiicybot"
 var channelID = "N/A" // C3K9VAK3N
 //var botFather = "" // use @botname whoami, to get the user_id of bot_father
 
-func GetBotFatherId(filename string) string {
-	cfg, err := config.ParseYamlFile(filename)
-	if err != nil {
-		fmt.Printf("Cannot parse the config file: %s\n", filename)
-	}
-	botfather := cfg.UString("botfather", "")
-	if botfather == "" {
-		fmt.Printf("Get botfather from env\n")
-		botfather = os.Getenv("botfather")
-	}
-
-	return botfather
-}
-
-func GetToken(filename string) string {
-	cfg, err := config.ParseYamlFile(filename)
-	if err != nil {
-		fmt.Printf("Cannot parse the config file: %s\n", filename)
-	}
-	token := cfg.UString("slacktoken", "")
-	if token == "" {
-		fmt.Printf("Get slacktoken from env\n")
-		token = os.Getenv("slacktoken")
-	}
-	/*
-		if err != nil {
-			fmt.Printf("Cannot get the slacktoken from config file: %s\n", filename)
-		} else {
-			token = os.Getenv("slacktoken")
-		}
-	*/
-	return token
-}
-
-func GetChannelId(filename string) string {
-	cfg, err := config.ParseYamlFile(filename)
-	if err != nil {
-		fmt.Printf("Cannot parse the config file: %s\n", filename)
-		return ""
-	}
-	channelId, err := cfg.String("ReportChannel")
-	if err != nil {
-		fmt.Printf("Cannot get the slacktoken from config file: %s\n", filename)
-		return ""
-	}
-	return channelId
-}
 
 //cmd = stock aapl
 //cmd = whoami
@@ -87,15 +40,8 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		channelID, timestamp, err := api.PostMessage(channelid, "whoami ", params)
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 	} else if len(cmd) == 2 && (cmd[1] == "help" || cmd[1] == "h") {
-		/*
-			bot,   err := api.GetBotInfo(botid)
-			if err != nil {
-				fmt.Printf("%s\n", err)
-				return err
-			}
-		*/
+	
 		mesg := fmt.Sprintf("%s command opts [val]\n", botName)
-
 		mesg = fmt.Sprintf(mesg + "help, get this help info\n")
 		mesg = fmt.Sprintf(mesg + "command list\n")
 		mesg = fmt.Sprintf(mesg + "   whoami -- get the user_id\n")
@@ -173,7 +119,13 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 
 	} else if len(cmd) == 2 && (cmd[1] == "botfather" || cmd[1] == "father" || cmd[1] == "bot_father") {
-		botfather := GetBotFatherId("config.yaml") // get botfathe userid from config.yaml
+	
+		cfg , err := LoadConfig("config.yaml")
+		if err != nil {
+			return err
+		}
+		
+		botfather := cfg.GetBotFatherId() // get botfathe userid from config.yaml
 		user, err := api.GetUserInfo(botfather)
 		if err != nil {
 			fmt.Printf("%s\n", err)
@@ -187,6 +139,23 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 			//Pretext: magnet_info,
 			Text: msg,
 			//Text:    magnets,
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, "", params)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+
+	} else if len(cmd) == 3 && (cmd[1] == "bijin" || cmd[1] == "pic" ) {
+	
+		piclink, msg := GetBiJinPhoto(cmd[2])
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			//Pretext: magnet_info,
+			Text: msg,
+			ImageURL: piclink,
 		}
 		params.Attachments = []slack.Attachment{attachment}
 		channelID, timestamp, err := api.PostMessage(channelid, "", params)

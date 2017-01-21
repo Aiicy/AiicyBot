@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"os"
+	"github.com/olebedev/config"
 )
 
 const Magnet_re = `/magnet[^ <'\"]*/i`
@@ -15,6 +17,59 @@ func findMagnets(docs string) []string {
 	reg := regexp.MustCompilePOSIX(Magnet_re)
 	match := reg.FindAllString(docs, -1)
 	return match
+}
+type slackCFG struct {
+	cfg *config.Config
+}
+
+func LoadConfig(filename string) (slackCFG, error) {
+	cfg, err := config.ParseYamlFile(filename)
+	if err != nil {
+		fmt.Printf("Cannot parse the config file: %s\n", filename)
+		return slackCFG{cfg : &config.Config{}}, err
+	}
+	return slackCFG{cfg: cfg}, nil
+}
+
+func (self slackCFG) GetBotFatherId() string {
+	botfather := self.cfg.UString("botfather", "")
+	if botfather == "" {
+		fmt.Printf("Get botfather from env\n")
+		botfather = os.Getenv("botfather")
+	}
+
+	return botfather
+}
+
+func (self slackCFG) GetToken() string {
+	token := self.cfg.UString("slacktoken", "")
+	if token == "" {
+		fmt.Printf("Get slacktoken from env\n")
+		token = os.Getenv("slacktoken")
+	}
+	/*
+		if err != nil {
+			fmt.Printf("Cannot get the slacktoken from config file: %s\n", filename)
+		} else {
+			token = os.Getenv("slacktoken")
+		}
+	*/
+	return token
+}
+
+func (self slackCFG)GetChannelId() string {
+	channelId, err := self.cfg.String("ReportChannel")
+	if err != nil {
+		fmt.Printf("Cannot get the slacktoken from config file: \n")
+		return ""
+	}
+	return channelId
+}
+
+func (self slackCFG) GetBiJinTimeZone() string {
+	timezone := self.cfg.UString("BIJIN_TIMEZONE", "Asia/Tokyo")
+
+	return timezone
 }
 
 // Get the quote via Yahoo. You should replace this method to something

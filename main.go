@@ -7,8 +7,13 @@ import (
 )
 
 func actionStartSlack(c *cli.Context) error {
-	token := GetToken("config.yaml")
-	channelID = GetChannelId("config.yaml")
+	cfg , err := LoadConfig("config.yaml")
+	if err != nil {
+		return err
+	}
+	
+	token := cfg.GetToken()
+	channelID = cfg.GetChannelId()
 	slackRun(token, channelID)
 
 	return nil
