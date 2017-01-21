@@ -47,28 +47,25 @@ func (self slackCFG) GetToken() string {
 		fmt.Printf("Get slacktoken from env\n")
 		token = os.Getenv("slacktoken")
 	}
-	/*
-		if err != nil {
-			fmt.Printf("Cannot get the slacktoken from config file: %s\n", filename)
-		} else {
-			token = os.Getenv("slacktoken")
-		}
-	*/
 	return token
 }
 
 func (self slackCFG)GetChannelId() string {
-	channelId, err := self.cfg.String("ReportChannel")
-	if err != nil {
-		fmt.Printf("Cannot get the slacktoken from config file: \n")
-		return ""
+	channelId := self.cfg.UString("ReportChannel", "")
+	if channelId == "" {
+		fmt.Printf("Get ReportChannel from env\n")
+		channelId = os.Getenv("ReportChannel")
 	}
 	return channelId
 }
 
+//export BIJIN_TIMEZONE=Asia/Tokyo
 func (self slackCFG) GetBiJinTimeZone() string {
-	timezone := self.cfg.UString("BIJIN_TIMEZONE", "Asia/Tokyo")
-
+	timezone := self.cfg.UString("BIJIN_TIMEZONE", "")
+	if timezone == "" {
+		fmt.Printf("Get BIJIN_TIMEZONE from env\n")
+		timezone = os.Getenv("BIJIN_TIMEZONE")
+	}
 	return timezone
 }
 
