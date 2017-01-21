@@ -1,0 +1,17 @@
+dist: trusty
+sudo: required
+
+language: go
+go:
+  - 1.7
+before_install:
+  - go get -d -v -t
+script:
+  - go build -o aiicybot
+deploy:
+  provider: releases
+  api_key: "${GH_DEPLOY_KEY}"
+  file: "aiicybot"
+  skip_cleanup: true
+  on:
+    tags: true
