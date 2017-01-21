@@ -3,12 +3,12 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"github.com/olebedev/config"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
-	"os"
-	"github.com/olebedev/config"
 )
 
 const Magnet_re = `/magnet[^ <'\"]*/i`
@@ -18,15 +18,43 @@ func findMagnets(docs string) []string {
 	match := reg.FindAllString(docs, -1)
 	return match
 }
+
 type slackCFG struct {
 	cfg *config.Config
 }
 
+func Exist(filename string) bool {
+	dirs, err := os.Open(".")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer dirs.Close()
+	//参数小于或等去0，表示读取所有的文件
+	//另外一个只读取文件名的函数
+	//fs, err := dirs.Readdirname(0)
+	fs, err := dirs.Readdir(-1)
+	if err == nil {
+		for _, file := range fs {
+			if filename == file.Name() {
+				return true
+			}
+		}
+	} else {
+		fmt.Println("Readdir:", err)
+	}
+	return false
+
+}
+
 func LoadConfig(filename string) (slackCFG, error) {
+	if Exist(filename) == false {
+		return slackCFG{cfg: &config.Config{}}, nil
+	}
+
 	cfg, err := config.ParseYamlFile(filename)
 	if err != nil {
 		fmt.Printf("Cannot parse the config file: %s\n", filename)
-		return slackCFG{cfg : &config.Config{}}, err
+		return slackCFG{cfg: &config.Config{}}, err
 	}
 	return slackCFG{cfg: cfg}, nil
 }
@@ -50,7 +78,7 @@ func (self slackCFG) GetToken() string {
 	return token
 }
 
-func (self slackCFG)GetChannelId() string {
+func (self slackCFG) GetChannelId() string {
 	channelId := self.cfg.UString("ReportChannel", "")
 	if channelId == "" {
 		fmt.Printf("Get ReportChannel from env\n")
