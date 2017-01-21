@@ -1,5 +1,6 @@
-slacktoken: YOUR_SLACK_BOT_TOKEN
+slacktoken: YOUR_SLACKBOT_API_TOKEN
 ReportChannel: '#github'
+botfather:  USER_ID # @botname whoami, to get the botfather's userid
 
 
 
