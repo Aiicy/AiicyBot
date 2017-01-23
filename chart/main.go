@@ -14,7 +14,7 @@ import (
 func main() {
 	
 	var date_duration [2]string = [2]string{"2016-01-01", "2016-06-01"}
-	days := yql.GetHistoricalData("GOOG", "daily", date_duration)
+	days := yql.GetHistoricalData("AAPL", "daily", date_duration)
 	var day_t_x []time.Time
 	var day_c_y []float64
 	for _, day := range days {
@@ -27,6 +27,9 @@ func main() {
 			Style: chart.Style{
 				Show: true,
 			},
+		},
+		YAxis: chart.YAxis{
+			Style: chart.StyleShow(),
 		},
 		Series: []chart.Series{
 			chart.TimeSeries{
