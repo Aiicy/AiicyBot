@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/sndnvaps/go-yql-finance"
 	"fmt"
+	"time"
 )
 
 
@@ -41,9 +42,14 @@ g – 时间周期。Example: g=w, 表示周期是’周’。d->’日’(day),
 */
 	var date_duration [2]string = [2]string{"2016-01-01", "2016-02-01"}
 	days := yql.GetHistoricalData("GOOG", "daily", date_duration)
-
+	var day_t []time.Time
+	var day_c []float64
 	for _, day := range days {
-		fmt.Println(day.Date)
-		fmt.Println(day.Close)
+		the_time, _ := time.Parse("2006-01-02", day.Date.Format("2006-01-02"))
+		day_t = append(day_t, the_time)
+		day_c = append(day_c, day.Close)
 	}
+	
+		fmt.Println(day_t)
+		fmt.Println(day_c)
 }
