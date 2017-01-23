@@ -23,7 +23,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "aiicySlackBot"
 	app.Usage = "Slack bot to get the stock infomation"
-	app.Version = "0.5.0"
+	app.Version = "0.6.0"
 	app.Compiled = time.Now()
 	app.Copyright = "Copyright (c) 2017 sndnvaps<admin@sndnvaps.com>"
 	app.Authors = []cli.Author{

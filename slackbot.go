@@ -14,7 +14,6 @@ var botName = "@aiicybot"
 var channelID = "N/A" // C3K9VAK3N
 //var botFather = "" // use @botname whoami, to get the user_id of bot_father
 
-
 //cmd = stock aapl
 //cmd = whoami
 //cmd = botfather | father | bot_father
@@ -40,18 +39,23 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		channelID, timestamp, err := api.PostMessage(channelid, "whoami ", params)
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 	} else if len(cmd) == 2 && (cmd[1] == "help" || cmd[1] == "h") {
-	
-		mesg := fmt.Sprintf("%s command opts [val]\n", botName)
-		mesg = fmt.Sprintf(mesg + "help, get this help info\n")
+
+		mesg := fmt.Sprintf("*%s* command opts [val]\n", botName)
+		mesg = fmt.Sprintf(mesg + "`help|h`, get this help info\n")
 		mesg = fmt.Sprintf(mesg + "command list\n")
-		mesg = fmt.Sprintf(mesg + "   whoami -- get the user_id\n")
-		mesg = fmt.Sprintf(mesg + "   old|old_driver|olddriver, who is the old driver\n")
-		mesg = fmt.Sprintf(mesg + "   bot_father|botfather|father, get the bot father name\n")
-		mesg = fmt.Sprintf(mesg + "   fuli|magnet  val , get the magnet link\n")
+		mesg = fmt.Sprintf(mesg + "   `whoami` -- get the user_id\n")
+		mesg = fmt.Sprintf(mesg + "   `old|old_driver|olddriver`, who is the old driver\n")
+		mesg = fmt.Sprintf(mesg + "   `bot_father|botfather|father`, get the bot father name\n")
+		mesg = fmt.Sprintf(mesg + "   `fuli|magnet`  val , get the magnet link\n")
 
 		params := slack.PostMessageParameters{}
+		//parse markdown
+		//https://daringfireball.net/projects/markdown/
+		var markdownIn []string = []string{"text"}
+
 		attachment := slack.Attachment{
-			Text: mesg,
+			Text:       mesg,
+			MarkdownIn: markdownIn,
 		}
 		params.Attachments = []slack.Attachment{attachment}
 		channelID, timestamp, err := api.PostMessage(channelid, "", params)
@@ -119,12 +123,12 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 
 	} else if len(cmd) == 2 && (cmd[1] == "botfather" || cmd[1] == "father" || cmd[1] == "bot_father") {
-	
-		cfg , err := LoadConfig("config.yaml")
+
+		cfg, err := LoadConfig("config.yaml")
 		if err != nil {
 			return err
 		}
-		
+
 		botfather := cfg.GetBotFatherId() // get botfathe userid from config.yaml
 		user, err := api.GetUserInfo(botfather)
 		if err != nil {
@@ -148,13 +152,13 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		}
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 
-	} else if len(cmd) == 3 && (cmd[1] == "bijin" || cmd[1] == "pic" ) {
-	
+	} else if len(cmd) == 3 && (cmd[1] == "bijin" || cmd[1] == "pic") {
+
 		piclink, msg := GetBiJinPhoto(cmd[2])
 		params := slack.PostMessageParameters{}
 		attachment := slack.Attachment{
 			//Pretext: magnet_info,
-			Text: msg,
+			Text:     msg,
 			ImageURL: piclink,
 		}
 		params.Attachments = []slack.Attachment{attachment}
