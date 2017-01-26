@@ -47,6 +47,8 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		mesg = fmt.Sprintf(mesg + "   `old|old_driver|olddriver`, who is the old driver\n")
 		mesg = fmt.Sprintf(mesg + "   `bot_father|botfather|father`, get the bot father name\n")
 		mesg = fmt.Sprintf(mesg + "   `fuli|magnet`  val , get the magnet link\n")
+		mesg = fmt.Sprintf(mesg + "   `weather|forecast` location, get the weather forecast of after 10 days\n")
+		mesg = fmt.Sprintf(mesg + "   `fuli|hentai|mm|pic`, get the random sexy picture\n")
 
 		params := slack.PostMessageParameters{}
 		//parse markdown
