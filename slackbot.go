@@ -169,6 +169,24 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		}
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 
+	} else if len(cmd) == 3 && (cmd[1] == "weather" || cmd[1] == "forecast") {
+		//input should be 
+		//@aiicybot weather `foshan,guangdong,china`
+		msg, icon_url  := GetWeatherForecastInfo(cmd[2])
+		params := slack.PostMessageParameters{}
+		attachment := slack.Attachment{
+			//Pretext: magnet_info,
+			Text:     msg,
+			ImageURL: icon_url,
+		}
+		params.Attachments = []slack.Attachment{attachment}
+		channelID, timestamp, err := api.PostMessage(channelid, "", params)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+
 	}
 	return nil
 
