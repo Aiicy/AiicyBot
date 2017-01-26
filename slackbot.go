@@ -187,6 +187,31 @@ func ParseCommand(api *slack.Client, rtm *slack.RTM, cmd []string, userid string
 		}
 		fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 
+	} else if len(cmd) == 2 && (cmd[1] == "hentai" || cmd[1] == "pic" ||
+		 cmd[1] == "mm" || cmd[1] == "fuli") {
+
+		cfg, err := LoadConfig("config.yaml")
+		if err != nil {
+			return err
+		}
+		image_path := cfg.GetImagePath()
+		dir_list := ListPath(image_path)
+		params := slack.FileUploadParameters{
+			Title:    "sex mm pic",
+			Filetype: "auto",
+			File:     RandomPicName(dir_list), // *.jpg| *.jpeg|*.png|*.gif
+			Channels: []string{channelid},
+
+			//Content:  "Nan Nan Nan Nan Nan Nan Nan Nan Batman",
+		}
+		file, err := api.UploadFile(params)
+		
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			return err
+		}
+		fmt.Printf("Name: %s, URL: %s\n", file.Name, file.URLPrivateDownload)
+
 	}
 	return nil
 

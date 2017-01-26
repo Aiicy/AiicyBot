@@ -97,6 +97,16 @@ func (self slackCFG) GetBiJinTimeZone() string {
 	return timezone
 }
 
+//export image_path=image
+func (self slackCFG) GetImagePath() string {
+	timezone := self.cfg.UString("image_path", "")
+	if timezone == "" {
+		fmt.Printf("Get image_path from env\n")
+		timezone = os.Getenv("image_path")
+	}
+	return timezone
+}
+
 // Get the quote via Yahoo. You should replace this method to something
 // relevant to your team!
 func getQuote(sym string) string {

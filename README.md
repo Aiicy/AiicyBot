@@ -23,6 +23,10 @@ BIJIN_TIMEZONE: 'Asia/Shanghai'
 	   $./slackbot start
 	2. you can use [setenv.sh](/setenv.sh) to run the app
 	$source ./setenv.sh && ./slackbot start
+
+# set up the sent sexy mm func
+	1. python pic_dl.py
+	2. copy all the file after download && put to images folder
 	
 
 

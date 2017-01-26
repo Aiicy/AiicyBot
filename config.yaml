@@ -1,4 +1,6 @@
-slacktoken: YOU_SLACK_BOT_API_TOKEN_HERE
-ReportChannel: '#github'
+slacktoken: replace_with your_slackbot_token
+ReportChannel: '#general'
 botfather:  U3K9E0HRA
 BIJIN_TIMEZONE: 'Asia/Shanghai'
+image_path: images
+
