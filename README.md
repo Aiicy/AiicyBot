@@ -5,6 +5,6 @@ telegram Bot
 
   go get github.com/sndnvaps/AiicyBot
 
-# change the botname set in config.yaml for you self
+# change the bottoken set in config.yaml for you self
 
 LICENSE: [MIT](https://sndnvaps.mit-license.org/)
