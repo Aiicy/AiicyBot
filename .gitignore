@@ -1,0 +1,5 @@
+*.exe
+pics/*.jpg
+pics/*.png
+pics/*.bmp
+pics/*.gif
