@@ -7,8 +7,8 @@ import (
 var Config = struct {
 	BotName   string `default:"AiicyBot"`
 	PicFolder string `default:"pics"`
-
-	Secure struct {
+	BijinTZ   string `required:"true" env:"BIJIN_TIMEZONE"`
+	Secure    struct {
 		BotToken string `required:"true" env:"BOT_TOKEN"`
 	}
 }{}

@@ -67,7 +67,14 @@ func main() {
 
 	bot.Handle("/pic", func(m *tb.Message) {
 		pic := GenRandomPicFromPath(Config.PicFolder)
+
 		p := &tb.Photo{File: tb.FromDisk(pic)}
+		bot.Send(m.Chat, p)
+	})
+
+	bot.Handle("/time", func(m *tb.Message) {
+		PicUrl := GetBiJinPhoto()
+		p := &tb.Photo{File: tb.FromURL(PicUrl)}
 		bot.Send(m.Chat, p)
 	})
 

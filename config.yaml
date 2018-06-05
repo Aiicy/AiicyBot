@@ -2,5 +2,7 @@ botname: AiicyBot
 
 picfolder: pics
 
+bijintz: Asia/Shanghai
+
 secure:
   bottoken:   Put you BotToken here
