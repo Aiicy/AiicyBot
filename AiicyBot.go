@@ -1,26 +1,25 @@
+// +build !windows
+
 package main
 
 import (
 	"io/ioutil"
-	"log"
 	"os"
 	"time"
 
+	"github.com/kardianos/osext"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-func Separator() string {
-	var path string = ""
-	if os.IsPathSeparator('\\') {
-		path = "\\"
-	} else {
-		path = "/"
+func GenRandomPicFromPath(path string) string {
+	pwd, err := osext.ExecutableFolder()
+	if err != nil {
+		log.Error(err)
 	}
 
-	return path
-}
-
-func GenRandomPicFromPath(path string) string {
+	log.Debugf("current path is %s", pwd)
+	log.Debugf("Pic folder is %s", path)
+	path = pwd + "/" + path
 	f, err := os.Stat(path)
 	if err != nil {
 		log.Fatalln(err)
@@ -39,19 +38,19 @@ func GenRandomPicFromPath(path string) string {
 	}
 
 	PicName := dir_list[RandInt(0, NumPic)].Name()
-	pwd, _ := os.Getwd()
-	PicName = pwd + Separator() + path + Separator() + PicName
-	log.Printf("PicName is %s\n", PicName)
+
+	PicName = path + "/" + PicName
+	log.Infof("PicName is %s", PicName)
 
 	return PicName
 
 }
 
-func main() {
+func StartBot() {
 	//BotName := Config.BotName
 
 	setting := tb.Settings{
-		Token:  Config.Secure.BotToken,
+		Token:  conf.Secure.BotToken,
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	}
 	bot, err := tb.NewBot(setting)
@@ -66,7 +65,7 @@ func main() {
 	})
 
 	bot.Handle("/pic", func(m *tb.Message) {
-		pic := GenRandomPicFromPath(Config.PicFolder)
+		pic := GenRandomPicFromPath(conf.PicFolder)
 
 		p := &tb.Photo{File: tb.FromDisk(pic)}
 		bot.Send(m.Chat, p)

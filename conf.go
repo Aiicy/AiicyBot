@@ -4,15 +4,17 @@ import (
 	"github.com/jinzhu/configor"
 )
 
-var Config = struct {
+type Config struct {
 	BotName   string `default:"AiicyBot"`
-	PicFolder string `default:"pics"`
+	PicFolder string `default:"pics" env:" BOT_PIC_F"`
 	BijinTZ   string `required:"true" env:"BIJIN_TIMEZONE"`
 	Secure    struct {
 		BotToken string `required:"true" env:"BOT_TOKEN"`
 	}
-}{}
+}
+
+var conf Config
 
 func init() {
-	configor.Load(&Config, "config.yaml")
+	configor.Load(&conf, "config.yaml")
 }

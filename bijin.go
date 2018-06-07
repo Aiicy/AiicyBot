@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"math/rand"
 	"net/http"
 	"strings"
@@ -81,11 +80,11 @@ var prefixes = map[string]string{
 
 func LoadLocation() *time.Location {
 
-	tz := Config.BijinTZ
+	tz := conf.BijinTZ
 
 	l, err := time.LoadLocation(tz)
 	if err != nil {
-		log.Printf("Error loading location: %v", err)
+		log.Errorf("Error loading location: %s", err.Error())
 	}
 
 	return l
@@ -101,7 +100,7 @@ func GetBiJinPhoto() (link string) {
 	minutes := fmt.Sprintf("%02d", t.Minute())
 	link = getLink(strings.ToLower(strings.TrimSpace(region)))
 	link = fmt.Sprintf("%s%s%s.jpg", link, hours, minutes)
-	//log.Printf("PicUrl = %s\n", link)
+	log.Infof("Time 's PicUrl = %s", link)
 	return link
 }
 
