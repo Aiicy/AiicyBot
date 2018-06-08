@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"time"
@@ -75,6 +76,16 @@ func StartBot() {
 		PicUrl := GetBiJinPhoto()
 		p := &tb.Photo{File: tb.FromURL(PicUrl)}
 		bot.Send(m.Chat, p)
+	})
+
+	bot.Handle("/help", func(m *tb.Message) {
+		text := fmt.Sprintf("%s support commands\n", conf.BotName)
+		text = text + "/hi -- just for test the bot online or not\n"
+		text = text + "/pic -- Get the random mm pic\n"
+		text = text + fmt.Sprintf("/time -- Show the time of Location:[%s] by mm\n", conf.BijinTZ)
+		text = text + "/help -- show the above info\n"
+		bot.Send(m.Chat, text)
+
 	})
 
 	bot.Start()
