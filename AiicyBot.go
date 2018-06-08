@@ -65,6 +65,10 @@ func StartBot() {
 		bot.Send(m.Chat, "Hello, "+m.Sender.FirstName+"!")
 	})
 
+	bot.Handle("/ping", func(m *tb.Message) {
+		bot.Send(m.Chat, "pong")
+	})
+
 	bot.Handle("/pic", func(m *tb.Message) {
 		pic := GenRandomPicFromPath(conf.PicFolder)
 
@@ -80,9 +84,10 @@ func StartBot() {
 
 	bot.Handle("/help", func(m *tb.Message) {
 		text := fmt.Sprintf("%s support commands\n", conf.BotName)
-		text = text + "/hi -- just for test the bot online or not\n"
-		text = text + "/pic -- Get the random mm pic\n"
+		text = text + "/hi -- hello world \n"
+		text = text + "/pic -- get the random mm pic\n"
 		text = text + fmt.Sprintf("/time -- Show the time of Location:[%s] by mm\n", conf.BijinTZ)
+		text = text + "/ping -- get the reply is pong when the bot online\n"
 		text = text + "/help -- show the above info\n"
 		bot.Send(m.Chat, text)
 
