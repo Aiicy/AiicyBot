@@ -66,6 +66,7 @@ func StartBot() {
 		text = text + "Git 服务器地址: [https://git.aiicy.com/](https://git.aiicy.com/)\n"
 		text = text + "请点击连接添加我们的机器人: [https://t.me/AiicyBot](https://t.me/AiicyBot)\n"
 		text = text + "获取使用方法，请输入 /help\n"
+		bot.Notify(m.Chat, tb.Typing)
 		bot.Send(m.Chat, text, &tb.SendOptions{
 			ParseMode: tb.ModeMarkdown,
 		})
@@ -83,12 +84,14 @@ func StartBot() {
 		pic := GenRandomPicFromPath(conf.PicFolder)
 
 		p := &tb.Photo{File: tb.FromDisk(pic)}
+		bot.Notify(m.Chat, tb.UploadingPhoto)
 		bot.Send(m.Chat, p)
 	})
 
 	bot.Handle("/time", func(m *tb.Message) {
 		PicUrl := GetBiJinPhoto()
 		p := &tb.Photo{File: tb.FromURL(PicUrl)}
+		bot.Notify(m.Chat, tb.UploadingPhoto)
 		bot.Send(m.Chat, p)
 	})
 
@@ -99,6 +102,7 @@ func StartBot() {
 		text = text + fmt.Sprintf("/time -- Show the time of Location:[%s] by mm\n", conf.BijinTZ)
 		text = text + "/ping -- get the reply is pong when the bot online\n"
 		text = text + "/help -- show the above info\n"
+		bot.Notify(m.Chat, tb.Typing)
 		bot.Send(m.Chat, text)
 
 	})
