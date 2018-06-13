@@ -6,3 +6,7 @@ bijintz: Asia/Shanghai
 
 secure:
   bottoken:   Put you BotToken here
+
+dialogflow:
+  token: Put you DialogFlow token here
+  lang: ZH_CN

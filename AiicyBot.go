@@ -62,14 +62,13 @@ func StartBot() {
 	}
 
 	bot.Handle(tb.OnText, func(m *tb.Message) {
-		text := fmt.Sprintf("机器人名字 @%s\n", conf.BotName)
-		text = text + "Git 服务器地址: [https://git.aiicy.com/](https://git.aiicy.com/)\n"
-		text = text + "请点击连接添加我们的机器人: [https://t.me/AiicyBot](https://t.me/AiicyBot)\n"
-		text = text + "获取使用方法，请输入 /help\n"
-		bot.Notify(m.Chat, tb.Typing)
-		bot.Send(m.Chat, text, &tb.SendOptions{
-			ParseMode: tb.ModeMarkdown,
-		})
+		/*
+			text := fmt.Sprintf("机器人名字 @%s\n", conf.BotName)
+			text = text + "Git 服务器地址: [https://git.aiicy.com/](https://git.aiicy.com/)\n"
+			text = text + "请点击连接添加我们的机器人: [https://t.me/AiicyBot](https://t.me/AiicyBot)\n"
+			text = text + "获取使用方法，请输入 /help\n"
+		*/
+		ProcessMessage(bot, m)
 
 	})
 	bot.Handle("/hi", func(m *tb.Message) {
