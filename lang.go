@@ -3,8 +3,8 @@ package main
 //go:generate go-bindata -pkg main -o bindata.go locales/...
 
 import (
-	"github.com/Aiicy/i18nTest/i18n"
-	"github.com/Aiicy/i18nTest/pkg/setting"
+	"github.com/Aiicy/AiicyBot/pkg/i18n"
+	"github.com/Aiicy/AiicyBot/pkg/setting"
 	in "github.com/Unknwon/i18n"
 )
 
