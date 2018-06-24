@@ -44,7 +44,7 @@ func NewDialogFlowClient(options Options) (error, *DialogFlowClient) {
 
 	client.sessionID = options.SessionID
 	if client.sessionID == "" {
-		u := uuid.NewV4()
+		u,_ := uuid.NewV4()
 		client.sessionID = u.String()
 	}
 

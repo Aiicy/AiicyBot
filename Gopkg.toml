@@ -65,6 +65,10 @@
   branch = "v2"
   name = "gopkg.in/tucnak/telebot.v2"
 
+[[override]]
+  branch = "master"
+  name = "github.com/satori/go.uuid"
+  
 [prune]
   go-tests = true
   unused-packages = true
