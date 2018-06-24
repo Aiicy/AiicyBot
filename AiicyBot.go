@@ -78,7 +78,7 @@ func StartBot() {
 
 	})
 	bot.Handle("/hi", func(m *tb.Message) {
-		bot.Send(m.Chat, Tr(cusSet.CurLang, "hello")+" "+m.Sender.FirstName+"!")
+		bot.Send(m.Chat, Tr("hello", m.Sender.FirstName))
 	})
 
 	bot.Handle("/ping", func(m *tb.Message) {
@@ -110,11 +110,11 @@ func StartBot() {
 
 	bot.Handle("/help", func(m *tb.Message) {
 		text := fmt.Sprintf("%s support commands\n", cusSet.TgConf.BotName)
-		text = text + "/hi -- hello world \n"
-		text = text + "/pic -- get the random mm pic\n"
+		text = text + "/hi -- " + Tr("help.hi") + " \n"
+		text = text + "/pic -- " + Tr("help.pic") + " \n"
 		text = text + fmt.Sprintf("/time -- Show the time of Location:[%s] by mm\n", cusSet.TgConf.BijinTZ)
-		text = text + "/ping -- get the reply is pong when the bot online\n"
-		text = text + "/help -- show the above info\n"
+		text = text + "/ping -- " + Tr("help.ping") + " \n"
+		text = text + "/help -- " + Tr("help.help") + " \n"
 		bot.Notify(m.Chat, tb.Typing)
 		bot.Send(m.Chat, text)
 

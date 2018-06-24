@@ -32,6 +32,6 @@ func InitI18n() {
 	})
 }
 
-func Tr(curLang string, s string, args ...interface{}) string {
-	return in.Tr(curLang, s, args)
+func Tr(s string, args ...interface{}) string {
+	return in.Tr(setting.CurLang, s, args)
 }
