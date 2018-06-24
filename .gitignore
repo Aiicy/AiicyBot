@@ -1,4 +1,6 @@
 *.exe
+AiicyBot
+.idea/
 pics/*.jpg
 pics/*.png
 pics/*.bmp

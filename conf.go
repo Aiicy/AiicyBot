@@ -17,8 +17,12 @@ type Config struct {
 	}
 }
 
-var conf Config
+var (
+	conf    Config
+	curLang string
+)
 
 func init() {
 	configor.Load(&conf, "config.yaml")
+	curLang = "en_US"
 }

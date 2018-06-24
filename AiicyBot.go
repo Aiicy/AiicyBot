@@ -72,7 +72,7 @@ func StartBot() {
 
 	})
 	bot.Handle("/hi", func(m *tb.Message) {
-		bot.Send(m.Chat, "Hello, "+m.Sender.FirstName+"!")
+		bot.Send(m.Chat, Tr(curLang, "hello")+" "+m.Sender.FirstName+"!")
 	})
 
 	bot.Handle("/ping", func(m *tb.Message) {
@@ -92,6 +92,14 @@ func StartBot() {
 		p := &tb.Photo{File: tb.FromURL(PicUrl)}
 		bot.Notify(m.Chat, tb.UploadingPhoto)
 		bot.Send(m.Chat, p)
+	})
+
+	bot.Handle("/setlang", func(m *tb.Message) {
+		if "zh_CN" == m.Payload || "简体中文" == m.Payload {
+			curLang = "zh_CN"
+		} else {
+			curLang = "en_US"
+		}
 	})
 
 	bot.Handle("/help", func(m *tb.Message) {
