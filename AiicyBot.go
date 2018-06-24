@@ -106,7 +106,7 @@ func StartBot() {
 		} else {
 			cusSet.CurLang = "en-US"
 		}
-		bot.Send(m.Chat, Tr("change_lang"))
+		bot.Send(m.Chat, Tr("change_lang", cusSet.TgConf.BotName))
 	})
 
 	bot.Handle("/help", func(m *tb.Message) {
@@ -114,7 +114,8 @@ func StartBot() {
 		text = text + "/hi -- " + Tr("help.hi") + " \n"
 		text = text + "/pic -- " + Tr("help.pic") + " \n"
 		text = text + fmt.Sprintf("/time -- "+Tr("help.time", cusSet.TgConf.BijinTZ)+"\n")
-		text = text + "/ping -- " + Tr("help.ping") + " \n"
+		text = text + "/setlang -- " + Tr("help.setlang", cusSet.TgConf.BotName) + " \n"
+		text = text + "/ping -- " + Tr("help.ping", cusSet.TgConf.BotName) + " \n"
 		text = text + "/help -- " + Tr("help.help") + " \n"
 		bot.Notify(m.Chat, tb.Typing)
 		bot.Send(m.Chat, text)
