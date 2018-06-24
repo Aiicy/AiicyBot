@@ -9,6 +9,11 @@ cd $GOPATH/src/github.com/Aiicy/AiicyBot
 go build
 ```
 
-**Notice: Change the bottoken set in config.yaml for you self**
+# Configure
+
+```shell
+cp example_config.yaml config.yaml
+```
+**Notice: Change the bottoken set in` config.yaml` for youself**
 
 LICENSE: [MIT](LICENSE)

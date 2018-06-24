@@ -1,5 +1,7 @@
 *.exe
 AiicyBot
+*.log
+config.yaml
 .idea/
 pics/*.jpg
 pics/*.png
