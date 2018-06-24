@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	cusSet "github.com/Aiicy/AiicyBot/pkg/setting"
 	"github.com/kardianos/osext"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
@@ -51,7 +52,7 @@ func StartBot() {
 	//BotName := Config.BotName
 
 	setting := tb.Settings{
-		Token:  conf.Secure.BotToken,
+		Token:  cusSet.TgConf.Secure.BotToken,
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	}
 	bot, err := tb.NewBot(setting)
@@ -72,7 +73,7 @@ func StartBot() {
 
 	})
 	bot.Handle("/hi", func(m *tb.Message) {
-		bot.Send(m.Chat, Tr(curLang, "hello")+" "+m.Sender.FirstName+"!")
+		bot.Send(m.Chat, Tr(cusSet.CurLang, "hello")+" "+m.Sender.FirstName+"!")
 	})
 
 	bot.Handle("/ping", func(m *tb.Message) {
@@ -80,7 +81,7 @@ func StartBot() {
 	})
 
 	bot.Handle("/pic", func(m *tb.Message) {
-		pic := GenRandomPicFromPath(conf.PicFolder)
+		pic := GenRandomPicFromPath(cusSet.TgConf.PicFolder)
 
 		p := &tb.Photo{File: tb.FromDisk(pic)}
 		bot.Notify(m.Chat, tb.UploadingPhoto)
@@ -96,17 +97,17 @@ func StartBot() {
 
 	bot.Handle("/setlang", func(m *tb.Message) {
 		if "zh_CN" == m.Payload || "简体中文" == m.Payload {
-			curLang = "zh_CN"
+			cusSet.CurLang = "zh_CN"
 		} else {
-			curLang = "en_US"
+			cusSet.CurLang = "en_US"
 		}
 	})
 
 	bot.Handle("/help", func(m *tb.Message) {
-		text := fmt.Sprintf("%s support commands\n", conf.BotName)
+		text := fmt.Sprintf("%s support commands\n", cusSet.TgConf.BotName)
 		text = text + "/hi -- hello world \n"
 		text = text + "/pic -- get the random mm pic\n"
-		text = text + fmt.Sprintf("/time -- Show the time of Location:[%s] by mm\n", conf.BijinTZ)
+		text = text + fmt.Sprintf("/time -- Show the time of Location:[%s] by mm\n", cusSet.TgConf.BijinTZ)
 		text = text + "/ping -- get the reply is pong when the bot online\n"
 		text = text + "/help -- show the above info\n"
 		bot.Notify(m.Chat, tb.Typing)

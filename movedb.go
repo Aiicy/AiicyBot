@@ -3,6 +3,7 @@ package main
 import (
 	"reflect"
 
+	"github.com/Aiicy/AiicyBot/pkg/setting"
 	apiai "github.com/mlabouardy/dialogflow-go-client/models"
 	"github.com/mlabouardy/moviedb"
 	tb "gopkg.in/tucnak/telebot.v2"
@@ -11,7 +12,7 @@ import (
 func ProcessMessage(bot *tb.Bot, m *tb.Message) {
 
 	var userQuery = m.Text
-	var dialogFlowResponse = GetResponse(userQuery, conf.DialogFlow.Token, conf.DialogFlow.Lang)
+	var dialogFlowResponse = GetResponse(userQuery, setting.TgConf.DialogFlow.Token, setting.TgConf.DialogFlow.Lang)
 
 	if !reflect.DeepEqual(dialogFlowResponse.Metadata, apiai.Metadata{}) && dialogFlowResponse.Metadata.IntentName == "shows" {
 		var showType = dialogFlowResponse.Parameters["show-type"]

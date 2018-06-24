@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/Aiicy/AiicyBot/pkg/setting"
 )
 
 type profile struct {
@@ -80,7 +82,7 @@ var prefixes = map[string]string{
 
 func LoadLocation() *time.Location {
 
-	tz := conf.BijinTZ
+	tz := setting.TgConf.BijinTZ
 
 	l, err := time.LoadLocation(tz)
 	if err != nil {
