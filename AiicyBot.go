@@ -102,9 +102,9 @@ func StartBot() {
 
 	bot.Handle("/setlang", func(m *tb.Message) {
 		if "zh_CN" == m.Payload || "简体中文" == m.Payload {
-			cusSet.CurLang = "zh_CN"
+			cusSet.CurLang = "zh-CN"
 		} else {
-			cusSet.CurLang = "en_US"
+			cusSet.CurLang = "en-US"
 		}
 	})
 
