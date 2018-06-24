@@ -106,6 +106,7 @@ func StartBot() {
 		} else {
 			cusSet.CurLang = "en-US"
 		}
+		bot.Send(m.Chat, Tr("change_lang"))
 	})
 
 	bot.Handle("/help", func(m *tb.Message) {
