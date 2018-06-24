@@ -1,3 +1,8 @@
+//
+// Copyright (c) 2016-2018 The Aiicy Team
+// Licensed under The MIT License (MIT)
+// See: LICENSE
+//
 //rand_windows.go
 package main
 

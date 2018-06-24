@@ -1,10 +1,14 @@
 # AiicyBot
-telegram Bot
+Telegram bot
 
-# build 
+# Build 
 
-  go get github.com/sndnvaps/AiicyBot
+```shell
+go get github.com/Aiicy/AiicyBot
+cd $GOPATH/src/github.com/Aiicy/AiicyBot
+go build
+```
 
-# change the bottoken set in config.yaml for you self
+**Notice: Change the bottoken set in config.yaml for you self**
 
-LICENSE: [MIT](https://sndnvaps.mit-license.org/)
+LICENSE: [MIT](LICENSE)
