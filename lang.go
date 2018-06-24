@@ -3,9 +3,29 @@ package main
 //go:generate go-bindata -pkg main -o bindata.go locales/...
 
 import (
-	"github.com/Unknwon/i18n"
+	"github.com/Aiicy/i18nTest/i18n"
+	"github.com/Aiicy/i18nTest/pkg/setting"
+	in "github.com/Unknwon/i18n"
 )
 
+func InitI18n() {
+	localeNames, err := AssetDir("locales")
+	if err != nil {
+		log.Errorf("Fail to list locale files: %v\n", err)
+	}
+	//I18n Local files
+	localFiles := make(map[string][]byte)
+	for _, name := range localeNames {
+		localFiles[name] = MustAsset("locales/" + name)
+	}
+	i18n.I18n(i18n.Options{
+		Files:       localFiles,
+		Langs:       setting.Langs,
+		Names:       setting.Names,
+		DefaultLang: setting.CurLang,
+	})
+}
+
 func Tr(curLang string, s string, args ...interface{}) string {
-	return i18n.Tr(curLang, s, args)
+	return in.Tr(curLang, s, args)
 }
