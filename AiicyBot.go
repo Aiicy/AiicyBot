@@ -110,10 +110,10 @@ func StartBot() {
 	})
 
 	bot.Handle("/help", func(m *tb.Message) {
-		text := fmt.Sprintf("%s support commands\n", cusSet.TgConf.BotName)
+		text := fmt.Sprintf(Tr("help.title", cusSet.TgConf.BotName) + "\n")
 		text = text + "/hi -- " + Tr("help.hi") + " \n"
 		text = text + "/pic -- " + Tr("help.pic") + " \n"
-		text = text + fmt.Sprintf("/time -- Show the time of Location:[%s] by mm\n", cusSet.TgConf.BijinTZ)
+		text = text + fmt.Sprintf("/time -- "+Tr("help.time", cusSet.TgConf.BijinTZ)+"\n")
 		text = text + "/ping -- " + Tr("help.ping") + " \n"
 		text = text + "/help -- " + Tr("help.help") + " \n"
 		bot.Notify(m.Chat, tb.Typing)
